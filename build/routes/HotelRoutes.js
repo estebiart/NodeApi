@@ -10,7 +10,9 @@ class HotelRoutes {
     config() {
         this.router.get('/', hotelController_1.hotelController.index);
         this.router.get('/:id', hotelController_1.hotelController.getone);
+        this.router.get('/:?filtro&tipo', hotelController_1.hotelController.filtrar);
         this.router.post('/', hotelController_1.hotelController.create);
+        this.router.post('/calificacion', hotelController_1.hotelController.calificacion);
         this.router.delete('/:id', hotelController_1.hotelController.delete);
         this.router.put('/:id', hotelController_1.hotelController.update);
     }

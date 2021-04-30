@@ -17,14 +17,14 @@ const database_1 = __importDefault(require("../database"));
 class HotelController {
     index(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const hoteles = yield database_1.default.query('SELECT *FROM hoteles');
+            const hoteles = yield database_1.default.query('SELECT *FROM hoteles   INNER JOIN foto ON hoteles.id_hotel =foto.hotel_id INNER JOIN calificacion ON hoteles.id_hotel =calificacion.IDHotel INNER JOIN categorias ON hoteles.IDCategoria =categorias.id_categoria;');
             res.json(hoteles);
         });
     }
     getone(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const hoteles = yield database_1.default.query('SELECT *FROM hoteles WHERE id= ?', [id]);
+            const hoteles = yield database_1.default.query('SELECT *FROM hoteles   INNER JOIN foto ON hoteles.id_hotel =foto.hotel_id INNER JOIN calificacion ON hoteles.id_hotel =calificacion.IDHotel INNER JOIN categorias ON hoteles.IDCategoria =categorias.id_categoria WHERE hoteles.id_hotel= ?', [id]);
             if (hoteles.legth > 0) {
                 return res.json(hoteles[0]);
             }
@@ -33,21 +33,41 @@ class HotelController {
     }
     create(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const hoteles = yield database_1.default.query('INSERT INTO hoteles set ?', [req.body]);
-            res.json('cretaet');
+            yield database_1.default.query('INSERT INTO hoteles set ?', [req.body]);
+            yield database_1.default.query('INSERT INTO foto set ?', [req.body]);
+            res.json('create');
+        });
+    }
+    filtrar(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { filtro, tipo } = req.query;
+            const hoteles = yield database_1.default.query('SELECT *FROM hoteles   INNER JOIN foto ON hoteles.id_hotel =foto.hotel_id INNER JOIN calificacion ON hoteles.id_hotel =calificacion.IDHotel INNER JOIN categorias ON hoteles.IDCategoria =categorias.id_categoria ORDER BY ? ?', [filtro, tipo]);
+            if (hoteles.legth > 0) {
+                return res.json(hoteles[0]);
+            }
+            res.status(404).json(hoteles);
+        });
+    }
+    calificacion(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield database_1.default.query('INSERT INTO calificacion set ?', [req.body]);
+            res.json('calificacion');
         });
     }
     delete(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            yield database_1.default.query('DELETE FROM hoteles WHERE id= ?', [id]);
+            yield database_1.default.query('DELETE FROM hoteles WHERE id_hotel= ?', [id]);
+            yield database_1.default.query('DELETE FROM foto WHERE hotel_id= ?', [id]);
+            yield database_1.default.query('DELETE FROM calificacion WHERE IDHotel= ?', [id]);
             res.json('delete');
         });
     }
     update(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            yield database_1.default.query('UPDATE hoteles set ? WHERE id= ?', [id]);
+            yield database_1.default.query('UPDATE hoteles set ? WHERE id_hotel= ?', [id]);
+            yield database_1.default.query('UPDATE foto set ? WHERE id_foto= ?', [id]);
             res.json('update');
         });
     }
