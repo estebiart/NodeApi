@@ -15,7 +15,10 @@ class HotelRoutes{
         this.router.get('/:id',hotelController.getone);
         this.router.get('/:?filtro&tipo',hotelController.filtrar);
         this.router.post('/',hotelController.create);
-        this.router.post('/calificacion',hotelController.calificacion);
+        this.router.post('/calificacion/',hotelController.calificacionInsert);
+        this.router.get('/calificacion/:id',hotelController.calificacionSelect);
+        this.router.post('/fotos/',hotelController.fotoInsert);
+        this.router.get('/fotos/:id',hotelController.fotoSelect);
         this.router.delete('/:id',hotelController.delete);
         this.router.put('/:id',hotelController.update);
       
